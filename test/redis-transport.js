@@ -3,7 +3,6 @@
 var redis = require('redis-mock');
 var bunyan = require('bunyan');
 var demand = require('must');
-var sinon = require('sinon');
 var RedisTransport = require('../');
 
 describe('Bunyan redis transport', function () {
