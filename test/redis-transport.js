@@ -65,11 +65,24 @@ describe('Bunyan redis transport', function () {
       throw err;
     });
 
-    transport.on('logged', function (entry) {
+    transport.once('logged', function (entry) {
       demand(entry.msg).eql('test');
       demand(entry.level).eql(20);
       demand(entry).own('val');
       demand(entry.val).eql(1);
+
+      return done();
+    });
+  });
+
+  it('should successfully serialize circular dependencies', function (done) {
+    var circularObj = {};
+    circularObj.circularRef = circularObj;
+
+    logger.debug(circularObj);
+
+    transport.once('logged', function (entry) {
+      demand(entry.circularRef).eql(entry.circularRef.circularRef);
 
       return done();
     });

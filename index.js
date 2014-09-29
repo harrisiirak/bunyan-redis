@@ -3,6 +3,7 @@
 var redis = require('redis');
 var vasync = require('vasync');
 var events = require('events');
+var stringify = require('json-stringify-safe');
 
 /**
  * Create a new RedisTransport instance
@@ -64,7 +65,7 @@ RedisTransport.prototype.write = function write (entry) {
 
       // Push data
       function pushEntryToList (args, next) {
-        var data = JSON.stringify(entry);
+        var data = stringify(entry, null, 2);
         client.lpush(self._container, data, function dataStored (err) {
           if (err) {
             return next(err);
